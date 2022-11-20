@@ -18,6 +18,20 @@ app.get("/", (req,res) => {
     res.render("index");
 });
 
+/*About us route */
+app.get("/about",(req,res)=> {
+    res.render("about")
+});
+
+/*Contact us route */
+app.get("/contact",(req,res)=> {
+    res.render("about")
+});
+
+/*Blog route */
+app.get("/blog",(req,res)=> {
+    res.render("blog")
+});
 
 /*Spin the server here */
 app.listen(PORT, ()=>{
