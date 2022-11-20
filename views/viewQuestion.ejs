@@ -1,0 +1,26 @@
+    
+    <%- include("header") -%>
+    <main class="page-body">
+        
+        <div class="content">
+            <% if(cookies.sessionId) {%>
+                <div class="userMenu"> Add Question </div>
+            <%}%>
+
+          
+            
+            <div class="question">
+                <h3><%=question.title%></h3>
+                <p><%=question.ques%></p>  
+                <div class="stats">
+                    <span>Posted On : <%=question.postedOn%></span>
+                    <span>Votes Up : <%=question.upVotes%></span>
+                    <span>Votes Down : <%=question.downVotes%></span>
+                </div>             
+            </div>
+            
+        </div>
+    </main>
+    <%- include("footer") -%>
+
+    

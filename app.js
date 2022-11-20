@@ -67,6 +67,37 @@ app.get("/", (req,res) => {
     
 });
 
+app.get("/view/:slug", (req,res) => {
+    //Fetch all available questions from database
+    try{
+        pool.getConnection((err, connection) => {
+            if(err){
+                console.log(`Error connecting MySQL : ${err}`);
+                return;
+            }
+            //Select questions lates first
+            const sql =`select * from question where id=1`;
+            connection.query(sql, async(err,rows) =>{
+                try{
+                    if(err) {
+                        console.log(err);
+                        return;
+                    }                              
+                    //User doesnot exists
+                    if(rows.length !=0 ) {
+                      
+                       res.render("viewQuestion",{question:rows[0], cookies:req.cookies});
+                    }
+                }
+                catch{}
+            });
+        });
+    }
+    catch{
+    }
+    
+});
+
 /*About us route */
 app.get("/about",(req,res)=> {
     res.render("about")
