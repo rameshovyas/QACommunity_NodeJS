@@ -18,9 +18,13 @@
         <li><a href="/blog">Blog</a></li>
         <li><a href="/contact">Contact</a></li>                        
     </ul>
-    <div class="userInfo">       
+    <div class="userInfo">   
+        <% if(cookies) {%>                
+            <a class="signup" href="/signout">Signout(<%=name%></a>
+        <% }else{%>        
         <a class="signin" href="/signin">SIGN In</a>
         <a class="signup" href="/signup">Register</a>
+        <%}%>
     </div>
 
 </header>  

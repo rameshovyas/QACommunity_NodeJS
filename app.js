@@ -1,6 +1,7 @@
 /* Using dependent modules here */
 const express = require("express");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const mysql = require("mysql");
@@ -25,13 +26,16 @@ app.set('view engine','ejs');
 /* static middleware for rendering static files */
 app.use(express.static('public'));
 
-//Use body parser
+//Use body parser middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//Use Cookiee Parser middleware
+app.use(cookieParser());
 
+let loggedUser="";
 /* The root route for get request */
 app.get("/", (req,res) => {
-    res.render("index");
+    res.render("index",{cookies:req.cookies,name:loggedUser});
 });
 
 /*About us route */
@@ -58,6 +62,7 @@ app.get("/signup", (req,res) =>{
 app.get("/signin", (req,res) =>{
     res.render("signin") 
 })
+
 
 /**
  * Authentication Service Methods Here
@@ -163,6 +168,7 @@ app.post("/signin", async (req, res) => {
                        console.error(err);                       
                      } 
                      else {
+                        loggedUser=firstName + " " + lastName; 
                         res.setHeader("set-cookie", [`SESSION_ID=${sessionId}; httponly; samesite=lax`]);
                         res.redirect("/"); // Redirect to home page after successful login
                      }                       
@@ -183,6 +189,31 @@ app.post("/signin", async (req, res) => {
     }
     catch (ex){       
         console.error(ex);
+    }
+});
+
+
+/* signout */
+app.get("/signout", async (req,res) => {
+    const sessionId = req.cookies.SESSION_ID;
+    if(sessionId) {
+        pool.getConnection((err, connection) => {
+            if(err) {
+                console.error(err);
+            }
+            else
+            {   
+              const sql=`update user_auth set sessionId = null where sessionId = '${sessionId}'`
+              connection.query(sql, (err,rows) => {
+                if(err) {                                        
+                    res.render("error", {erroMessage : err});
+                }
+                else {                   
+                    res.render("index", {cookies : ""});
+                }
+              });
+            }
+        });  
     }
 });
 
