@@ -37,6 +37,7 @@ header{
     font-weight:500;
     font-size: 1.5rem;    
 }
+ul{list-style: none;}
 ul{padding:0; line-height:2px;}
 ul.nav{
     display: flex;
@@ -54,18 +55,29 @@ ul.nav{
     text-decoration: underline;
  }
  
-.userInfo > a{
+
+ .signin{
+    font-size: 14px;
+    margin-right: 1.5rem;   
+    color:#794EBD;
+    text-decoration: none;
+    text-transform: uppercase;
+ }
+ .signin:hover{   
+     text-decoration: underline;
+  }
+.signup{
     font-size: 14px;
    margin-right: 10px;   
    color:#fff;
    text-decoration: none;
    text-transform: uppercase;
-   display:block;
+   
    background-color: #794EBD;
    padding: 10px;
    border-radius: 2px;   
 }
-.userInfo > a:hover{
+.sign:hover{
     color:#794EBD; 
     background-color:transparent; 
 }
@@ -73,6 +85,7 @@ ul.nav{
 .content{
     width:1200px;
     padding:20px;
+    margin:0 auto;
 }
 footer{
     text-align: center;
@@ -95,4 +108,50 @@ footer{
 }
 .page-body {
     flex-grow: 1;
+}
+
+/* Sign up / signin form related */
+.box{
+    max-width:400px;
+    margin:50px auto;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
+    padding:10px;
+}
+
+form{
+    text-align: center;
+    margin-left:20px;
+}
+button{
+  
+    border-radius: 2px;
+    border-color: transparent;
+    background-color:#794EBD;
+    color:white;
+    font-size: 18px;
+    border-width:0;
+    padding-bottom: 6px;
+    text-transform: uppercase;
+}
+
+input[type="text"]{
+    background: transparent;
+    text-align: center;
+    height: 60px;
+    top:10px;
+    border:0;
+    font-weight: 200;
+    width:300px;
+}
+
+input[type="text"]:focus{
+    outline: none;
+    box-shadow:inset 0 -6px 0 0 #794EBD;;
+}
+::placeholder{
+    color:grey;
+    opacity: 1;
+    font-size: 18px;
 }
