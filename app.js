@@ -54,6 +54,11 @@ app.get("/signup", (req,res) =>{
     res.render("signup") 
 })
 
+/* GET/signin */
+app.get("/signin", (req,res) =>{
+    res.render("signin") 
+})
+
 /**
  * Authentication Service Methods Here
  */
@@ -114,13 +119,72 @@ app.post("/signup", (req,res) => {
     }
     catch {
         res.status(500).send();
-    }
-   
-
-
-   
-    //res.render("thanks", {name:"Ramesh Vyas"})
+    }     
+    
 })
+
+
+/* Sign in POST method */
+// Login route
+app.post("/signin", async (req, res) => {
+    try {
+        const { email,password } = req.body;
+        if(email) {            
+            pool.getConnection((err, connection) => {
+            if(err) {
+                console.error(err);
+                return;
+            }
+            const sql =`select * from user_auth where username='${email}'`;
+            connection.query(sql, async(err,rows) =>{
+                if(err) {
+                    console.log(err);
+                    return;
+                }
+                if(rows.length ===0) {
+                    res.render("error",{errorMessage: "User does not exists!"});
+                    return;
+                }
+
+                // Username found Compare the password now
+                const saltedPassword = rows[0].user_password;
+        
+                const compareResult = await bcrypt.compare(password, saltedPassword);
+
+                if(compareResult === true) {                  
+
+                    // Generate new SessionId
+                    const sessionId = await randomSessionId();
+
+                    //Associate sessionId with the user by updating record
+                    const sql= `update user_auth set sessionId ='${sessionId}' where username='${email}'`
+                    connection.query(sql, (err,rows) => {
+                    if(err) {
+                       console.error(err);                       
+                     } 
+                     else {
+                        res.setHeader("set-cookie", [`SESSION_ID=${sessionId}; httponly; samesite=lax`]);
+                        res.redirect("/"); // Redirect to home page after successful login
+                     }                       
+                });
+
+                }
+                else {
+                    res.render("error",{errorMessage: "Password incorrect"});
+                }
+
+                
+            });    
+            });
+        }
+        else {
+            res.status(400).send("Username is required");
+        }
+    }
+    catch (ex){       
+        console.error(ex);
+    }
+});
 
 
 
@@ -129,3 +193,9 @@ app.post("/signup", (req,res) => {
 app.listen(PORT, ()=>{
     console.log(`Server is up and listening at port ${PORT}`);
 })
+
+
+// Function to Gneretae random string for session id
+async function randomSessionId() {
+    return crypto.randomBytes(64).toString('hex');
+}
