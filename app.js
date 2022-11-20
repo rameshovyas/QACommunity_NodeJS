@@ -33,9 +33,38 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 let loggedUser="";
+let questionList=[];
 /* The root route for get request */
 app.get("/", (req,res) => {
-    res.render("index",{cookies:req.cookies,name:loggedUser});
+    //Fetch all available questions from database
+    try{
+        pool.getConnection((err, connection) => {
+            if(err){
+                console.log(`Error connecting MySQL : ${err}`);
+                return;
+            }
+            //Select questions lates first
+            const sql =`select * from question order by postedOn DESC`;
+            connection.query(sql, async(err,rows) =>{
+                try{
+                    if(err) {
+                        console.log(err);
+                        return;
+                    }                              
+                    //User doesnot exists
+                    if(rows.length !=0 ) {
+                       // questionList = rows;
+                       //console.log(rows);
+                       res.render("index",{cookies:req.cookies,name:loggedUser, questions:rows});
+                    }
+                }
+                catch{}
+            });
+        });
+    }
+    catch{
+    }
+    
 });
 
 /*About us route */
@@ -209,7 +238,7 @@ app.get("/signout", async (req,res) => {
                     res.render("error", {erroMessage : err});
                 }
                 else {                   
-                    res.render("index", {cookies : ""});
+                    res.render("index", {cookies : req.cookies});
                 }
               });
             }

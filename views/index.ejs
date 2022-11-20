@@ -1,11 +1,27 @@
+    
     <%- include("header") -%>
     <main class="page-body">
         
         <div class="content">
-            <% if(cookies) {%>
+            <% if(cookies.sessionId) {%>
                 <div class="userMenu"> Add Question </div>
             <%}%>
-            This is home page
+
+            <%for(que of questions) {%>
+            <% slug = que.title.toLowerCase().replace(/ /g, '-')
+            .replace(/[^\w-]+/g, '');%>
+            <div class="question">
+                <a href="/view/<%=slug%>"><%=que.title%></a>
+                <p><%=que.ques%></p>  
+                <div class="stats">
+                    <span>Posted On : <%=que.postedOn%></span>
+                    <span>Votes Up : <%=que.upVotes%></span>
+                    <span>Votes Down : <%=que.downVotes%></span>
+                </div>             
+            </div>
+            <%}%>
         </div>
     </main>
     <%- include("footer") -%>
+
+    
