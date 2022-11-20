@@ -7,9 +7,15 @@ const PORT = 3000;
 /*Creating express app */
 const app = express();
 
+/*Setting up the vew engine of app to EJS */
+app.set('view engine','ejs');
+
+/* static middleware for rendering static files */
+app.use(express.static('public'));
+
 /* The root route for get request */
 app.get("/", (req,res) => {
-    res.send("Welcome to my Question Answer Community");
+    res.render("index");
 });
 
 
